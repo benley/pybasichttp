@@ -74,6 +74,8 @@ def FancyGetUrl(url, username=None, password=None, auth=True, prompt=True):
     username: username to use.
     password: password to use.
     auth: Boolean. If true, retry with basic auth if required.
+    prompt: Boolean. If true, prompt the user for username and password if
+            required.
   Returns:
     Direct output(s) of urllib2.urlopen(), which is a file-like object.
   Raises:
@@ -89,10 +91,11 @@ def FancyGetUrl(url, username=None, password=None, auth=True, prompt=True):
           raise
         logging.info('Retrying with http auth.')
         try:
-          if not username:
-            username = raw_input('Username: ')
-          if not password:
-            password = getpass.getpass()
+          if prompt:
+            if not username:
+              username = raw_input('Username: ')
+            if not password:
+              password = getpass.getpass()
           response = GetUrl(url, username, password)
         except urllib2.HTTPError as e:
           raise
